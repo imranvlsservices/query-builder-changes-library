@@ -62,11 +62,14 @@ export interface QueryBuilderClassNames {
     arrowIconButton?: string;
     arrowIcon?: string;
     removeIcon?: string;
+    editIcon?: string;
     addIcon?: string;
     button?: string;
     buttonGroup?: string;
     removeButton?: string;
     removeButtonSize?: string;
+    editButton?: string;
+    editButtonSize?: string;
     switchRow?: string;
     switchGroup?: string;
     switchLabel?: string;

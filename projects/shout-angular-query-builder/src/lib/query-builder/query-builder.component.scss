@@ -38,10 +38,10 @@
     }
   }
 
-  .q-remove-button {
-    color: #B3415D;
-    width: 31px;
-  }
+  // .q-remove-button {
+  //   color: #B3415D;
+  //   width: 31px;
+  // }
 
   .q-switch-group, .q-button-group {
     font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
@@ -186,34 +186,85 @@
 
   .q-connector {
     position: relative;
-
-    &::before {
-      top: -5px;
-      border-width: 0 0 2px 2px;
-    }
-
-    &::after {
-      border-width: 0 0 0 2px;
-      top: 50%;
-    }
-
-    &::before, &::after {
-      content: '';
-      left: -12px;
-      border-color: #CCC;
-      border-style: solid;
-      width: 9px;
-      height: calc(50% + 6px);
-      position: absolute;
-    }
-
-    &:last-child::after {
-      content: none;
-    }
+  }
+  
+  .q-connector::before {
+    top: -5px;
+    border-width: 0 0 2px 2px;
+  }
+  
+  .q-connector::after {
+    border-width: 0 0 0 2px;
+    top: 50%;
+  }
+  
+  .q-connector::before, 
+  .q-connector::after {
+    content: '';
+    left: -12px;
+    border-style: solid;
+    width: 9px;
+    height: calc(50% + 6px);
+    position: absolute;
+  }
+  
+  /* Odd Line (Blue) */
+  .q-connector:nth-child(odd)::before,
+  .q-connector:nth-child(odd)::after {
+    border-color: #007bff;  /* Blue */
+  }
+  
+  /* Even Line (Red) */
+  .q-connector:nth-child(even)::before,
+  .q-connector:nth-child(even)::after {
+    border-color: #dc3545;  /* Red */
+  }
+  
+  /* Remove the line for the last element */
+  .q-connector:last-child::after {
+    content: none;
   }
 
   .q-inline-block-display{
     display: inline-block;
     vertical-align: top;
   }
+  .q-remove-button {
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #dee2e6; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .q-edit-button {
+    background-color: #f8f9fa; /* Light background */
+    border: 1px solid #dee2e6; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .q-remove-button i {
+    color: #dc3545; /* Red icon color */
+  }
+
+  .rule-button {
+    background-color: #fff9e6;
+    border: 1px solid #f1e3b3;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  
+  
 }
