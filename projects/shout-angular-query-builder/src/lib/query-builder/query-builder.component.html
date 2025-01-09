@@ -85,7 +85,7 @@
         <label
         (click)="changeCondition('and')"
         [ngClass]="getClassNames('switchLabel')"
-        >THEN</label
+        >AND</label
       >
       </div>
       <div [ngClass]="getClassNames('switchControl')">
@@ -100,7 +100,7 @@
         <label
           (click)="changeCondition(orOption.value)"
           [ngClass]="getClassNames('switchLabel')"
-          >ELSE</label
+          >OR</label
         >
       </div>
     </div>
@@ -115,7 +115,7 @@
   "
 >
   <ul [ngClass]="getClassNames('tree')" *ngIf="data && data.rules">
-    <ng-container *ngFor="let rule of data.rules; let i = index">
+    <ng-container *ngFor="let rule of data.rules; let i = index; let isFirst = first">
       <ng-container
         *ngIf="{
           ruleset: !!rule.rules,
@@ -123,7 +123,168 @@
             !config.allowEmptyRulesets && rule.rules && rule.rules.length === 0
         } as local"
       >
-        <li [ngClass]="getQueryItemClassName(local)">
+        <li [ngClass]="getQueryItemClassName(local)" *ngIf="!rule.condition && isFirst">
+          <ng-container *ngIf="!local.ruleset">
+            <ng-container
+              *ngIf="
+                getRemoveButtonTemplate() as template;
+                else defaultRemoveButton
+              "
+            >
+              <div [ngClass]="getClassNames('buttonGroup', 'rightAlign')">
+                <ng-container
+                  *ngTemplateOutlet="
+                    template;
+                    context: getRemoveButtonContext(rule)
+                  "
+                ></ng-container>
+              </div>
+            </ng-container>
+
+            <ng-template #defaultRemoveButton>
+              <div
+                [ngClass]="getClassNames('buttonGroup', 'rightAlign')"
+                style="display: flex; gap: 10px; align-items: center"
+              >
+                <!-- Remove Button -->
+                <div [ngClass]="getClassNames('removeButtonSize')">
+                  <button
+                    type="button"
+                    [ngClass]="getClassNames('button', 'removeButton')"
+                    (click)="removeRule(rule, data)"
+                    [disabled]="disabled"
+                  >
+                    <i [ngClass]="getClassNames('removeIcon')"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-template>
+
+            <div *ngIf="entities?.length > 0" class="q-inline-block-display">
+              <ng-container
+                *ngIf="getEntityTemplate() as template; else defaultEntity"
+              >
+                <ng-container
+                  *ngTemplateOutlet="template; context: getEntityContext(rule)"
+                ></ng-container>
+              </ng-container>
+            </div>
+
+            <ng-template #defaultEntity>
+              <div [ngClass]="getClassNames('entityControlSize')">
+                <select
+                  [ngClass]="getClassNames('entityControl')"
+                  [(ngModel)]="rule.entity"
+                  (ngModelChange)="changeEntity($event, rule, i, data)"
+                  [disabled]="true"
+                >
+                  <option
+                    *ngFor="let entity of entities"
+                    [ngValue]="entity.value"
+                  >
+                    {{ entity.name }}
+                  </option>
+                </select>
+              </div>
+            </ng-template>
+
+            <ng-container
+              *ngIf="getFieldTemplate() as template; else defaultField"
+            >
+              <ng-container
+                *ngTemplateOutlet="template; context: getFieldContext(rule)"
+              ></ng-container>
+            </ng-container>
+
+            <ng-template #defaultField>
+
+            </ng-template>
+
+            <ng-container
+              *ngIf="getOperatorTemplate() as template; else defaultOperator"
+            >
+              <ng-container
+                *ngTemplateOutlet="template; context: getOperatorContext(rule)"
+              ></ng-container>
+            </ng-container>
+
+            <ng-template #defaultOperator>
+            </ng-template>
+
+            <ng-container
+              *ngIf="findTemplateForRule(rule) as template; else defaultInput"
+            >
+              <ng-container
+                *ngTemplateOutlet="template; context: getInputContext(rule)"
+              ></ng-container>
+            </ng-container>
+
+            <ng-template #defaultInput>
+              <div *ngFor="let onlyRule of data.rules; let i = index;">
+                <button *ngIf="!onlyRule.condition" class="rule-button" style="margin-right:10px" (click)="editRule(rule)">
+                  {{ onlyRule.field }} {{ onlyRule.operator }} {{ onlyRule.value }}
+                </button>
+              </div>
+  
+            </ng-template>
+          </ng-container>
+          <query-builder
+            *ngIf="local.ruleset"
+            [data]="rule"
+            [disabled]="disabled"
+            [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+            [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+            [parentInputTemplates]="parentInputTemplates || inputTemplates"
+            [parentOperatorTemplate]="
+              parentOperatorTemplate || operatorTemplate
+            "
+            [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+            [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+            [parentSwitchGroupTemplate]="
+              parentSwitchGroupTemplate || switchGroupTemplate
+            "
+            [parentButtonGroupTemplate]="
+              parentButtonGroupTemplate || buttonGroupTemplate
+            "
+            [parentRemoveButtonTemplate]="
+              parentRemoveButtonTemplate || removeButtonTemplate
+            "
+            [parentEmptyWarningTemplate]="
+              parentEmptyWarningTemplate || emptyWarningTemplate
+            "
+            [parentArrowIconTemplate]="
+              parentArrowIconTemplate || arrowIconTemplate
+            "
+            [parentValue]="data"
+            [classNames]="classNames"
+            [config]="config"
+            [allowRuleset]="allowRuleset"
+            [allowCollapse]="allowCollapse"
+            [emptyMessage]="emptyMessage"
+            [operatorMap]="operatorMap"
+          >
+          </query-builder>
+
+          <ng-container
+            *ngIf="
+              getEmptyWarningTemplate() as template;
+              else defaultEmptyWarning
+            "
+          >
+            <ng-container *ngIf="local.invalid">
+              <ng-container
+                *ngTemplateOutlet="template; context: getEmptyWarningContext()"
+              ></ng-container>
+            </ng-container>
+          </ng-container>
+
+          <ng-template #defaultEmptyWarning>
+            <p [ngClass]="getClassNames('emptyWarning')" *ngIf="local.invalid">
+              {{ emptyMessage }}
+            </p>
+          </ng-template>
+        </li>
+        <li [ngClass]="getQueryItemClassName(local)" *ngIf="rule.condition">
           <ng-container *ngIf="!local.ruleset">
             <ng-container
               *ngIf="
