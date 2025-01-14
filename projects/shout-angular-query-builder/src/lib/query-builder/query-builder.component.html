@@ -463,182 +463,150 @@
             </p>
           </ng-template>
         </li>
-        <!-- <li [ngClass]="getQueryItemClassName(local)" *ngIf="newData.then">
-          <query-builder
-          *ngIf="local.ruleset"
-          [data]="newData.then"
-          [newData]="newData.then"
-          [disabled]="disabled"
-          [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
-          [parentChangeCallback]="parentChangeCallback || onChangeCallback"
-          [parentInputTemplates]="parentInputTemplates || inputTemplates"
-          [parentOperatorTemplate]="
-            parentOperatorTemplate || operatorTemplate
-          "
-          [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
-          [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
-          [parentSwitchGroupTemplate]="
-            parentSwitchGroupTemplate || switchGroupTemplate
-          "
-          [parentButtonGroupTemplate]="
-            parentButtonGroupTemplate || buttonGroupTemplate
-          "
-          [parentRemoveButtonTemplate]="
-            parentRemoveButtonTemplate || removeButtonTemplate
-          "
-          [parentEmptyWarningTemplate]="
-            parentEmptyWarningTemplate || emptyWarningTemplate
-          "
-          [parentArrowIconTemplate]="
-            parentArrowIconTemplate || arrowIconTemplate
-          "
-          [parentValue]="newData"
-          [classNames]="classNames"
-          [config]="config"
-          [allowRuleset]="allowRuleset"
-          [allowCollapse]="allowCollapse"
-          [emptyMessage]="emptyMessage"
-          [operatorMap]="operatorMap"
-        >
-        </query-builder>
-        </li>
-        <li [ngClass]="getQueryItemClassName(local)" *ngIf="newData.else">
-          <query-builder
-          *ngIf="local.ruleset"
-          [data]="newData.else"
-          [newData]="newData.else"
-          [disabled]="disabled"
-          [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
-          [parentChangeCallback]="parentChangeCallback || onChangeCallback"
-          [parentInputTemplates]="parentInputTemplates || inputTemplates"
-          [parentOperatorTemplate]="
-            parentOperatorTemplate || operatorTemplate
-          "
-          [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
-          [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
-          [parentSwitchGroupTemplate]="
-            parentSwitchGroupTemplate || switchGroupTemplate
-          "
-          [parentButtonGroupTemplate]="
-            parentButtonGroupTemplate || buttonGroupTemplate
-          "
-          [parentRemoveButtonTemplate]="
-            parentRemoveButtonTemplate || removeButtonTemplate
-          "
-          [parentEmptyWarningTemplate]="
-            parentEmptyWarningTemplate || emptyWarningTemplate
-          "
-          [parentArrowIconTemplate]="
-            parentArrowIconTemplate || arrowIconTemplate
-          "
-          [parentValue]="newData"
-          [classNames]="classNames"
-          [config]="config"
-          [allowRuleset]="allowRuleset"
-          [allowCollapse]="allowCollapse"
-          [emptyMessage]="emptyMessage"
-          [operatorMap]="operatorMap"
-        >
-        </query-builder>
-        </li> -->
       </ng-container>
     </ng-container>
     <ng-container *ngIf="newData.then">
       <li
-      [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
-      *ngIf="newData.then"
-    >
-    <h4>then</h4>
-    </li>
-    <li
-    [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
-    *ngIf="newData.then && newData.then.condition"
-  >
-    <query-builder
-      [data]="newData.then"
-      [newData]="newData.then"
-      [disabled]="disabled"
-      [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
-      [parentChangeCallback]="parentChangeCallback || onChangeCallback"
-      [parentInputTemplates]="parentInputTemplates || inputTemplates"
-      [parentOperatorTemplate]="parentOperatorTemplate || operatorTemplate"
-      [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
-      [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
-      [parentSwitchGroupTemplate]="
-        parentSwitchGroupTemplate || switchGroupTemplate
-      "
-      [parentButtonGroupTemplate]="
-        parentButtonGroupTemplate || buttonGroupTemplate
-      "
-      [parentRemoveButtonTemplate]="
-        parentRemoveButtonTemplate || removeButtonTemplate
-      "
-      [parentEmptyWarningTemplate]="
-        parentEmptyWarningTemplate || emptyWarningTemplate
-      "
-      [parentArrowIconTemplate]="
-        parentArrowIconTemplate || arrowIconTemplate
-      "
-      [parentValue]="newData"
-      [classNames]="classNames"
-      [config]="config"
-      [allowRuleset]="allowRuleset"
-      [allowCollapse]="allowCollapse"
-      [emptyMessage]="emptyMessage"
-      [operatorMap]="operatorMap"
-    >
-    </query-builder>
-  </li>
+        [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+        *ngIf="newData.then.actions; else conditionTemplate"
+      >
+      <button class="rule-button" style="white-space: pre-line; text-align: left;">
+        <ng-container *ngFor="let action of newData.then.actions; let j = index">
+          Action {{ action.orderNo }}: {{ action.strategyCode }}
+          <br />
+      
+          <!-- Render payment processors for each action -->
+          <ng-container *ngIf="action.paymentProcessors">
+            <ng-container *ngFor="let processor of action.paymentProcessors">
+              Processor: {{ processor.paymentProcessorId }}
+              <span *ngIf="processor.priorityNo">
+                (Priority: {{ processor.priorityNo }})
+              </span>
+              <span *ngIf="processor.weightPercentage">
+                (Weight: {{ processor.weightPercentage }}%)
+              </span>
+              <br />
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </button>
+      </li>
+
+      <ng-template #conditionTemplate>
+        <li
+          [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+        >
+          <query-builder
+            [data]="newData.then"
+            [newData]="newData.then"
+            [disabled]="disabled"
+            [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+            [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+            [parentInputTemplates]="parentInputTemplates || inputTemplates"
+            [parentOperatorTemplate]="
+              parentOperatorTemplate || operatorTemplate
+            "
+            [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+            [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+            [parentSwitchGroupTemplate]="
+              parentSwitchGroupTemplate || switchGroupTemplate
+            "
+            [parentButtonGroupTemplate]="
+              parentButtonGroupTemplate || buttonGroupTemplate
+            "
+            [parentRemoveButtonTemplate]="
+              parentRemoveButtonTemplate || removeButtonTemplate
+            "
+            [parentEmptyWarningTemplate]="
+              parentEmptyWarningTemplate || emptyWarningTemplate
+            "
+            [parentArrowIconTemplate]="
+              parentArrowIconTemplate || arrowIconTemplate
+            "
+            [parentValue]="newData"
+            [classNames]="classNames"
+            [config]="config"
+            [allowRuleset]="allowRuleset"
+            [allowCollapse]="allowCollapse"
+            [emptyMessage]="emptyMessage"
+            [operatorMap]="operatorMap"
+          >
+          </query-builder>
+        </li>
+      </ng-template>
     </ng-container>
+
     <ng-container *ngIf="newData.else">
       <li
-      [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
-      *ngIf="newData.else"
-    >
-    <h4>Else</h4>
-    </li>
-    <li
-    [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
-    *ngIf="newData.else && newData.else.condition"
-  >
-    <query-builder
-      [data]="newData.else"
-      [newData]="newData.else"
-      [disabled]="disabled"
-      [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
-      [parentChangeCallback]="parentChangeCallback || onChangeCallback"
-      [parentInputTemplates]="parentInputTemplates || inputTemplates"
-      [parentOperatorTemplate]="parentOperatorTemplate || operatorTemplate"
-      [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
-      [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
-      [parentSwitchGroupTemplate]="
-        parentSwitchGroupTemplate || switchGroupTemplate
-      "
-      [parentButtonGroupTemplate]="
-        parentButtonGroupTemplate || buttonGroupTemplate
-      "
-      [parentRemoveButtonTemplate]="
-        parentRemoveButtonTemplate || removeButtonTemplate
-      "
-      [parentEmptyWarningTemplate]="
-        parentEmptyWarningTemplate || emptyWarningTemplate
-      "
-      [parentArrowIconTemplate]="
-        parentArrowIconTemplate || arrowIconTemplate
-      "
-      [parentValue]="newData"
-      [classNames]="classNames"
-      [config]="config"
-      [allowRuleset]="allowRuleset"
-      [allowCollapse]="allowCollapse"
-      [emptyMessage]="emptyMessage"
-      [operatorMap]="operatorMap"
-    >
-    </query-builder>
-  </li>
-  </ng-container>
+        [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+        *ngIf="newData.else.actions; else elseConditionTemplate"
+      >
+      <button class="rule-button" style="white-space: pre-line; text-align: left;">
+        <ng-container *ngFor="let action of newData.else.actions; let j = index">
+          Action {{ action.orderNo }}: {{ action.strategyCode }}
+          <br />
+      
+          <!-- Render payment processors for each action -->
+          <ng-container *ngIf="action.paymentProcessors">
+            <ng-container *ngFor="let processor of action.paymentProcessors">
+              Processor: {{ processor.paymentProcessorId }}
+              <span *ngIf="processor.priorityNo">
+                (Priority: {{ processor.priorityNo }})
+              </span>
+              <span *ngIf="processor.weightPercentage">
+                (Weight: {{ processor.weightPercentage }}%)
+              </span>
+              <br />
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </button>
+      </li>
 
-
+      <!-- Template for else.condition -->
+      <ng-template #elseConditionTemplate>
+        <li
+          [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+        >
+          <query-builder
+            [data]="newData.else"
+            [newData]="newData.else"
+            [disabled]="disabled"
+            [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+            [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+            [parentInputTemplates]="parentInputTemplates || inputTemplates"
+            [parentOperatorTemplate]="
+              parentOperatorTemplate || operatorTemplate
+            "
+            [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+            [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+            [parentSwitchGroupTemplate]="
+              parentSwitchGroupTemplate || switchGroupTemplate
+            "
+            [parentButtonGroupTemplate]="
+              parentButtonGroupTemplate || buttonGroupTemplate
+            "
+            [parentRemoveButtonTemplate]="
+              parentRemoveButtonTemplate || removeButtonTemplate
+            "
+            [parentEmptyWarningTemplate]="
+              parentEmptyWarningTemplate || emptyWarningTemplate
+            "
+            [parentArrowIconTemplate]="
+              parentArrowIconTemplate || arrowIconTemplate
+            "
+            [parentValue]="newData"
+            [classNames]="classNames"
+            [config]="config"
+            [allowRuleset]="allowRuleset"
+            [allowCollapse]="allowCollapse"
+            [emptyMessage]="emptyMessage"
+            [operatorMap]="operatorMap"
+          >
+          </query-builder>
+        </li>
+      </ng-template>
+    </ng-container>
   </ul>
 </div>
 

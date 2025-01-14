@@ -3,11 +3,22 @@ import { ValidationErrors } from '@angular/forms';
 export interface RuleSet {
     condition: string;
     rules: Array<RuleSet | Rule>;
+    actions?: Action[]; // Add actions to handle the action array
     collapsed?: boolean;
     isChild?: boolean;
     then?: RuleSet;
     else?: RuleSet;
-}
+  }
+  
+  export interface Action {
+    orderNo: number;
+    strategyCode: string;
+    paymentProcessors?: Array<{
+      paymentProcessorId?: string;
+      priorityNo?: number;
+      weightPercentage?: number;
+    }>;
+  }
 
 export interface Rule {
     field: string;
