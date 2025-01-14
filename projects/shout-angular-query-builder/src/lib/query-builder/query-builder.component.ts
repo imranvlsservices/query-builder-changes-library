@@ -118,7 +118,9 @@ export class QueryBuilderComponent
     boolean: ["="],
   };
   @Input() disabled: boolean;
-  @Input() data: RuleSet = { condition: "and", rules: [] };
+  @Input() data: RuleSet = {  } as any;
+  @Input() newData: any = { };
+  public setData : RuleSet = {  } as any;
 
   // For ControlValueAccessor interface
   public onChangeCallback: () => void;
@@ -194,11 +196,13 @@ export class QueryBuilderComponent
   // ----------OnInit Implementation----------
 
   ngOnInit() {
-    console.log("In ng on INT");
-    // this.data.rules = [
-    //     {field: 'age', operator: '<=', entity: 'physical'},
-    //   ]
+    //this.data = this.newData;
+    console.log('after setting the data');
     console.log(this.data);
+    console.log('after setting the new data');
+    console.log(this.newData);
+    
+
   }
 
   // ----------OnChanges Implementation----------
@@ -261,7 +265,7 @@ export class QueryBuilderComponent
   }
   set value(value: RuleSet) {
     // When component is initialized without a formControl, null is passed to value
-    this.data = value || { condition: "and", rules: [] };
+    this.data = value || { condition: "and", rules: [],then:{} as any,else:{} as any };
     this.handleDataChange();
   }
 

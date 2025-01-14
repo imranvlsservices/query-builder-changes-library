@@ -5,6 +5,8 @@ export interface RuleSet {
     rules: Array<RuleSet | Rule>;
     collapsed?: boolean;
     isChild?: boolean;
+    then?: RuleSet;
+    else?: RuleSet;
 }
 
 export interface Rule {

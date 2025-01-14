@@ -7,7 +7,7 @@
     *ngIf="allowCollapse"
     (click)="toggleCollapse()"
     [ngClass]="
-      getClassNames('arrowIconButton', data.collapsed ? 'collapsed' : null)
+      getClassNames('arrowIconButton', newData.collapsed ? 'collapsed' : null)
     "
   >
     <ng-container
@@ -72,27 +72,27 @@
   </ng-container>
 
   <ng-template #defaultSwitchGroup>
-    <div [ngClass]="getClassNames('switchGroup', 'transition')" *ngIf="data">
+    <div [ngClass]="getClassNames('switchGroup', 'transition')" *ngIf="newData">
       <div [ngClass]="getClassNames('switchControl')">
         <input
           type="radio"
           [ngClass]="getClassNames('switchRadio')"
-          [(ngModel)]="data.condition"
+          [(ngModel)]="newData.condition"
           [disabled]="disabled"
           value="and"
           #andOption
         />
         <label
-        (click)="changeCondition('and')"
-        [ngClass]="getClassNames('switchLabel')"
-        >AND</label
-      >
+          (click)="changeCondition('and')"
+          [ngClass]="getClassNames('switchLabel')"
+          >AND</label
+        >
       </div>
       <div [ngClass]="getClassNames('switchControl')">
         <input
           type="radio"
           [ngClass]="getClassNames('switchRadio')"
-          [(ngModel)]="data.condition"
+          [(ngModel)]="newData.condition"
           [disabled]="disabled"
           value="or"
           #orOption
@@ -111,11 +111,13 @@
   #treeContainer
   (transitionend)="transitionEnd($event)"
   [ngClass]="
-    getClassNames('treeContainer', data.collapsed ? 'collapsed' : null)
+    getClassNames('treeContainer', newData.collapsed ? 'collapsed' : null)
   "
 >
-  <ul [ngClass]="getClassNames('tree')" *ngIf="data && data.rules">
-    <ng-container *ngFor="let rule of data.rules; let i = index; let isFirst = first">
+  <ul [ngClass]="getClassNames('tree')" *ngIf="newData && newData.rules">
+    <ng-container
+      *ngFor="let rule of newData.rules; let i = index; let isFirst = first"
+    >
       <ng-container
         *ngIf="{
           ruleset: !!rule.rules,
@@ -123,7 +125,10 @@
             !config.allowEmptyRulesets && rule.rules && rule.rules.length === 0
         } as local"
       >
-        <li [ngClass]="getQueryItemClassName(local)" *ngIf="!rule.condition && isFirst">
+        <li
+          [ngClass]="getQueryItemClassName(local)"
+          *ngIf="!rule.condition && isFirst"
+        >
           <ng-container *ngIf="!local.ruleset">
             <ng-container
               *ngIf="
@@ -151,7 +156,7 @@
                   <button
                     type="button"
                     [ngClass]="getClassNames('button', 'removeButton')"
-                    (click)="removeRule(rule, data)"
+                    (click)="removeRule(rule, newData)"
                     [disabled]="disabled"
                   >
                     <i [ngClass]="getClassNames('removeIcon')"></i>
@@ -196,9 +201,7 @@
               ></ng-container>
             </ng-container>
 
-            <ng-template #defaultField>
-
-            </ng-template>
+            <ng-template #defaultField> </ng-template>
 
             <ng-container
               *ngIf="getOperatorTemplate() as template; else defaultOperator"
@@ -208,8 +211,7 @@
               ></ng-container>
             </ng-container>
 
-            <ng-template #defaultOperator>
-            </ng-template>
+            <ng-template #defaultOperator> </ng-template>
 
             <ng-container
               *ngIf="findTemplateForRule(rule) as template; else defaultInput"
@@ -220,17 +222,23 @@
             </ng-container>
 
             <ng-template #defaultInput>
-              <div *ngFor="let onlyRule of data.rules; let i = index;">
-                <button *ngIf="!onlyRule.condition" class="rule-button" style="margin-right:10px" (click)="editRule(rule)">
-                  {{ onlyRule.field }} {{ onlyRule.operator }} {{ onlyRule.value }}
+              <div *ngFor="let onlyRule of newData.rules; let i = index">
+                <button
+                  *ngIf="!onlyRule.condition"
+                  class="rule-button"
+                  style="margin-right: 10px"
+                  (click)="editRule(rule)"
+                >
+                  {{ onlyRule.field }} {{ onlyRule.operator }}
+                  {{ onlyRule.value }}
                 </button>
               </div>
-  
             </ng-template>
           </ng-container>
           <query-builder
             *ngIf="local.ruleset"
             [data]="rule"
+            [newData]="rule"
             [disabled]="disabled"
             [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
             [parentChangeCallback]="parentChangeCallback || onChangeCallback"
@@ -323,7 +331,7 @@
                   <button
                     type="button"
                     [ngClass]="getClassNames('button', 'removeButton')"
-                    (click)="removeRule(rule, data)"
+                    (click)="removeRule(rule, newData)"
                     [disabled]="disabled"
                   >
                     <i [ngClass]="getClassNames('removeIcon')"></i>
@@ -368,9 +376,7 @@
               ></ng-container>
             </ng-container>
 
-            <ng-template #defaultField>
-
-            </ng-template>
+            <ng-template #defaultField> </ng-template>
 
             <ng-container
               *ngIf="getOperatorTemplate() as template; else defaultOperator"
@@ -380,8 +386,7 @@
               ></ng-container>
             </ng-container>
 
-            <ng-template #defaultOperator>
-            </ng-template>
+            <ng-template #defaultOperator> </ng-template>
 
             <ng-container
               *ngIf="findTemplateForRule(rule) as template; else defaultInput"
@@ -392,7 +397,11 @@
             </ng-container>
 
             <ng-template #defaultInput>
-              <button type="button" class="rule-button" (click)="editRule(rule)">
+              <button
+                type="button"
+                class="rule-button"
+                (click)="editRule(rule)"
+              >
                 {{ rule.field }} {{ rule.operator }} {{ rule.value }}
               </button>
             </ng-template>
@@ -400,6 +409,7 @@
           <query-builder
             *ngIf="local.ruleset"
             [data]="rule"
+            [newData]="rule"
             [disabled]="disabled"
             [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
             [parentChangeCallback]="parentChangeCallback || onChangeCallback"
@@ -453,12 +463,184 @@
             </p>
           </ng-template>
         </li>
+        <!-- <li [ngClass]="getQueryItemClassName(local)" *ngIf="newData.then">
+          <query-builder
+          *ngIf="local.ruleset"
+          [data]="newData.then"
+          [newData]="newData.then"
+          [disabled]="disabled"
+          [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+          [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+          [parentInputTemplates]="parentInputTemplates || inputTemplates"
+          [parentOperatorTemplate]="
+            parentOperatorTemplate || operatorTemplate
+          "
+          [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+          [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+          [parentSwitchGroupTemplate]="
+            parentSwitchGroupTemplate || switchGroupTemplate
+          "
+          [parentButtonGroupTemplate]="
+            parentButtonGroupTemplate || buttonGroupTemplate
+          "
+          [parentRemoveButtonTemplate]="
+            parentRemoveButtonTemplate || removeButtonTemplate
+          "
+          [parentEmptyWarningTemplate]="
+            parentEmptyWarningTemplate || emptyWarningTemplate
+          "
+          [parentArrowIconTemplate]="
+            parentArrowIconTemplate || arrowIconTemplate
+          "
+          [parentValue]="newData"
+          [classNames]="classNames"
+          [config]="config"
+          [allowRuleset]="allowRuleset"
+          [allowCollapse]="allowCollapse"
+          [emptyMessage]="emptyMessage"
+          [operatorMap]="operatorMap"
+        >
+        </query-builder>
+        </li>
+        <li [ngClass]="getQueryItemClassName(local)" *ngIf="newData.else">
+          <query-builder
+          *ngIf="local.ruleset"
+          [data]="newData.else"
+          [newData]="newData.else"
+          [disabled]="disabled"
+          [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+          [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+          [parentInputTemplates]="parentInputTemplates || inputTemplates"
+          [parentOperatorTemplate]="
+            parentOperatorTemplate || operatorTemplate
+          "
+          [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+          [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+          [parentSwitchGroupTemplate]="
+            parentSwitchGroupTemplate || switchGroupTemplate
+          "
+          [parentButtonGroupTemplate]="
+            parentButtonGroupTemplate || buttonGroupTemplate
+          "
+          [parentRemoveButtonTemplate]="
+            parentRemoveButtonTemplate || removeButtonTemplate
+          "
+          [parentEmptyWarningTemplate]="
+            parentEmptyWarningTemplate || emptyWarningTemplate
+          "
+          [parentArrowIconTemplate]="
+            parentArrowIconTemplate || arrowIconTemplate
+          "
+          [parentValue]="newData"
+          [classNames]="classNames"
+          [config]="config"
+          [allowRuleset]="allowRuleset"
+          [allowCollapse]="allowCollapse"
+          [emptyMessage]="emptyMessage"
+          [operatorMap]="operatorMap"
+        >
+        </query-builder>
+        </li> -->
       </ng-container>
     </ng-container>
+    <ng-container *ngIf="newData.then">
+      <li
+      [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+      *ngIf="newData.then"
+    >
+    <h4>then</h4>
+    </li>
+    <li
+    [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+    *ngIf="newData.then && newData.then.condition"
+  >
+    <query-builder
+      [data]="newData.then"
+      [newData]="newData.then"
+      [disabled]="disabled"
+      [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+      [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+      [parentInputTemplates]="parentInputTemplates || inputTemplates"
+      [parentOperatorTemplate]="parentOperatorTemplate || operatorTemplate"
+      [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+      [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+      [parentSwitchGroupTemplate]="
+        parentSwitchGroupTemplate || switchGroupTemplate
+      "
+      [parentButtonGroupTemplate]="
+        parentButtonGroupTemplate || buttonGroupTemplate
+      "
+      [parentRemoveButtonTemplate]="
+        parentRemoveButtonTemplate || removeButtonTemplate
+      "
+      [parentEmptyWarningTemplate]="
+        parentEmptyWarningTemplate || emptyWarningTemplate
+      "
+      [parentArrowIconTemplate]="
+        parentArrowIconTemplate || arrowIconTemplate
+      "
+      [parentValue]="newData"
+      [classNames]="classNames"
+      [config]="config"
+      [allowRuleset]="allowRuleset"
+      [allowCollapse]="allowCollapse"
+      [emptyMessage]="emptyMessage"
+      [operatorMap]="operatorMap"
+    >
+    </query-builder>
+  </li>
+    </ng-container>
+    <ng-container *ngIf="newData.else">
+      <li
+      [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+      *ngIf="newData.else"
+    >
+    <h4>Else</h4>
+    </li>
+    <li
+    [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })"
+    *ngIf="newData.else && newData.else.condition"
+  >
+    <query-builder
+      [data]="newData.else"
+      [newData]="newData.else"
+      [disabled]="disabled"
+      [parentTouchedCallback]="parentTouchedCallback || onTouchedCallback"
+      [parentChangeCallback]="parentChangeCallback || onChangeCallback"
+      [parentInputTemplates]="parentInputTemplates || inputTemplates"
+      [parentOperatorTemplate]="parentOperatorTemplate || operatorTemplate"
+      [parentFieldTemplate]="parentFieldTemplate || fieldTemplate"
+      [parentEntityTemplate]="parentEntityTemplate || entityTemplate"
+      [parentSwitchGroupTemplate]="
+        parentSwitchGroupTemplate || switchGroupTemplate
+      "
+      [parentButtonGroupTemplate]="
+        parentButtonGroupTemplate || buttonGroupTemplate
+      "
+      [parentRemoveButtonTemplate]="
+        parentRemoveButtonTemplate || removeButtonTemplate
+      "
+      [parentEmptyWarningTemplate]="
+        parentEmptyWarningTemplate || emptyWarningTemplate
+      "
+      [parentArrowIconTemplate]="
+        parentArrowIconTemplate || arrowIconTemplate
+      "
+      [parentValue]="newData"
+      [classNames]="classNames"
+      [config]="config"
+      [allowRuleset]="allowRuleset"
+      [allowCollapse]="allowCollapse"
+      [emptyMessage]="emptyMessage"
+      [operatorMap]="operatorMap"
+    >
+    </query-builder>
+  </li>
+  </ng-container>
+
+
   </ul>
 </div>
-
-
 
 <!-- Dialog Modal (Bootstrap) -->
 <div *ngIf="isDialogOpen" [title]="'My Custom Dialog'">
@@ -542,18 +724,10 @@
 
           <!-- Modal Footer -->
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              (click)="close()"
-            >
+            <button type="button" class="btn btn-secondary" (click)="close()">
               Cancel
             </button>
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="submit()"
-            >
+            <button type="button" class="btn btn-primary" (click)="submit()">
               Apply
             </button>
           </div>
@@ -562,4 +736,3 @@
     </div>
   </div>
 </div>
-
