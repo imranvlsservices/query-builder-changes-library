@@ -225,6 +225,12 @@
     content: none;
   }
 
+  .parent-content{
+    display: flex;
+    align-items: center;
+    height: 100%; /* or a specific height */
+  }
+
   .q-inline-block-display{
     display: inline-block;
     vertical-align: top;
@@ -264,6 +270,27 @@
     cursor: pointer;
     display: inline-block;
   }
+
+  .then-else-button {
+    background-color: #5d23ed;
+    border: 1px solid #f5f4f1;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #f5f4f1;
+    cursor: pointer;
+    margin-right: 10px;
+
+    /* Center the button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Optional fixed height and width for consistent size */
+    height: 40px;
+    width: 80px;
+}
 
   
   
