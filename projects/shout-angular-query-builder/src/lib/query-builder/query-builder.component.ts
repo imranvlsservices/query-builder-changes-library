@@ -196,12 +196,6 @@ export class QueryBuilderComponent
   // ----------OnInit Implementation----------
 
   ngOnInit() {
-    //this.data = this.newData;
-    console.log('after setting the data');
-    console.log(this.data);
-    console.log('after setting the new data');
-    console.log(this.newData);
-    
 
   }
 
