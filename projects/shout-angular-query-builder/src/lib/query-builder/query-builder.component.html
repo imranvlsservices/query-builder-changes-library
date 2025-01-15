@@ -292,7 +292,7 @@
             </p>
           </ng-template>
         </li>
-        <li [ngClass]="getQueryItemClassName(local)" *ngIf="rule.condition">
+        <li [ngClass]="getQueryItemClassName(local)" *ngIf="rule.condition" >
           <ng-container *ngIf="!local.ruleset">
             <ng-container
               *ngIf="
@@ -470,9 +470,11 @@
         [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })" class="parent-content"
         *ngIf="newData.then.actions; else conditionTemplate"
       >
+      <div class="line"></div>
       <button class="then-else-button">
         Then
       </button>
+      <div class="line"></div>
       <button class="rule-button" style="white-space: pre-line; text-align: left;">
         <ng-container *ngFor="let action of newData.then.actions; let j = index">
           Action {{ action.orderNo }}: {{ action.strategyCode }}
@@ -544,9 +546,11 @@
         [ngClass]="getQueryItemClassName({ ruleset: true, invalid: false })" class="parent-content"
         *ngIf="newData.else.actions; else elseConditionTemplate"
       >
+      <div class="line"></div>
       <button class="then-else-button">
         Else
       </button>
+      <div class="line"></div>
       <button class="rule-button" style="white-space: pre-line; text-align: left;">
         <ng-container *ngFor="let action of newData.else.actions; let j = index">
           Action {{ action.orderNo }}: {{ action.strategyCode }}

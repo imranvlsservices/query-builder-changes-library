@@ -201,9 +201,9 @@
   .q-connector::before, 
   .q-connector::after {
     content: '';
-    left: -12px;
+    left: -15px;
     border-style: solid;
-    width: 9px;
+    width: 15px;
     height: calc(50% + 6px);
     position: absolute;
   }
@@ -229,6 +229,7 @@
     display: flex;
     align-items: center;
     height: 100%; /* or a specific height */
+    padding: 0 !important;
   }
 
   .q-inline-block-display{
@@ -269,18 +270,19 @@
     color: #333;
     cursor: pointer;
     display: inline-block;
+    margin-top:5px;
+    margin-bottom: 5px;
   }
 
   .then-else-button {
-    background-color: #5d23ed;
+    background-color: #f5f4f1;
     border: 1px solid #f5f4f1;
     border-radius: 20px;
     padding: 8px 16px;
     font-size: 14px;
     font-weight: 500;
-    color: #f5f4f1;
+    color: #333;
     cursor: pointer;
-    margin-right: 10px;
 
     /* Center the button */
     display: flex;
@@ -288,10 +290,15 @@
     justify-content: center;
 
     /* Optional fixed height and width for consistent size */
-    height: 40px;
-    width: 80px;
+    height: 30px;
+    width: 60px;
 }
 
+.line {
+  width: 20px;
+  height: 2px;
+  background-color: #333;
+}
   
   
 }
