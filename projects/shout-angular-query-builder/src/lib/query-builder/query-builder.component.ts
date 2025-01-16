@@ -49,6 +49,8 @@ import {
   TemplateRef,
   ViewChild,
   ElementRef,
+  EventEmitter,
+  Output,
 } from "@angular/core";
 declare var bootstrap: any; // Ensure Bootstrap is globally available
 
@@ -121,6 +123,8 @@ export class QueryBuilderComponent
   @Input() data: RuleSet = {  } as any;
   @Input() newData: any = { };
   public setData : RuleSet = {  } as any;
+  @Output() setDataChange: EventEmitter<any> = new EventEmitter();
+
 
   // For ControlValueAccessor interface
   public onChangeCallback: () => void;
@@ -197,6 +201,10 @@ export class QueryBuilderComponent
 
   ngOnInit() {
 
+  }
+
+  onDataChange(updatedData: any): void {
+    this.setDataChange.emit(updatedData);
   }
 
   // ----------OnChanges Implementation----------
@@ -895,6 +903,7 @@ export class QueryBuilderComponent
     this.inputValue = ""; // Reset value on field change
   }
   submit(parent?: RuleSet): void {
+    this.close();
     if (this.disabled) {
       return;
     }
@@ -908,7 +917,7 @@ export class QueryBuilderComponent
       this.editingRule = null;
     } else {
       // Add a new rule
-      parent = parent || this.data;
+      parent = parent || this.newData;
       parent.rules = parent.rules.concat([
         {
           field: this.selectedField,
@@ -927,7 +936,7 @@ export class QueryBuilderComponent
     // Trigger change and touched handlers
     this.handleTouched();
     this.handleDataChange();
-    this.close();
+
   }
 
   close() {
@@ -972,6 +981,10 @@ export class QueryBuilderComponent
     const fields = this.getFields(entity);
     const field = fields.find((f) => f.value === fieldValue);
     return field ? field.name : "N/A";
+  }
+
+  returnData(){
+    console.log(this.newData);
   }
 
   private handleDataChange(): void {
