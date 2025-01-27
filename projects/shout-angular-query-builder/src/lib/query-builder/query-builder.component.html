@@ -32,6 +32,16 @@
   <ng-template #defaultButtonGroup>
     <div [ngClass]="getClassNames('buttonGroup', 'rightAlign')">
       <button
+      type="button"
+      (click)="addRule('actionDataModal')"
+      [ngClass]="getClassNames('button')"
+      [disabled]="disabled"
+      data-toggle="modal"
+      data-target="#actionDataModal"
+    >
+      <i [ngClass]="getClassNames('addIcon')"></i> Action
+    </button>
+      <button
         type="button"
         (click)="addRule()"
         [ngClass]="getClassNames('button')"
@@ -128,7 +138,13 @@
         <li
           [ngClass]="getQueryItemClassName(local)"
           *ngIf="!rule.condition && isFirst"
+          class="parent-content"
         >
+        <div class="line"></div>
+        <button class="then-else-button">
+          Rule
+        </button>
+        <div class="line"></div>
           <ng-container *ngIf="!local.ruleset">
             <ng-container
               *ngIf="
@@ -222,7 +238,8 @@
             </ng-container>
 
             <ng-template #defaultInput>
-              <div *ngFor="let onlyRule of newData.rules; let i = index">
+              <div *ngFor="let onlyRule of newData.rules; let i = index; let isNewFirst=first;">
+                <span *ngIf="!isNewFirst && !onlyRule.condition" style="margin-right:10px">{{newData.condition}}</span>
                 <button
                   *ngIf="!onlyRule.condition"
                   class="rule-button"
@@ -232,6 +249,7 @@
                   {{ onlyRule.field }} {{ onlyRule.operator }}
                   {{ onlyRule.value }}
                 </button>
+      
               </div>
             </ng-template>
           </ng-container>
@@ -475,7 +493,11 @@
         Then
       </button>
       <div class="line"></div>
-      <button class="rule-button" style="white-space: pre-line; text-align: left;">
+      <button class="rule-button" style="white-space: pre-line; text-align: left;"
+      [disabled]="disabled"
+      data-toggle="modal"
+      data-target="#actionDataModal"
+       (click)="editThenAction(newData.then.actions)" >
         <ng-container *ngFor="let action of newData.then.actions; let j = index">
           Action {{ action.orderNo }}: {{ action.strategyCode }}
           <br />
@@ -486,7 +508,7 @@
               Processor: {{ processor.paymentProcessorId }}
               <span *ngIf="processor.priorityNo">
                 (Priority: {{ processor.priorityNo }})
-              </span>
+              </span>image.png
               <span *ngIf="processor.weightPercentage">
                 (Weight: {{ processor.weightPercentage }}%)
               </span>
@@ -551,7 +573,11 @@
         Else
       </button>
       <div class="line"></div>
-      <button class="rule-button" style="white-space: pre-line; text-align: left;">
+      <button class="rule-button" style="white-space: pre-line; text-align: left;"
+      [disabled]="disabled"
+      data-toggle="modal"
+      data-target="#actionDataModal"
+       (click)="editThenAction(newData.else.actions)" >
         <ng-container *ngFor="let action of newData.else.actions; let j = index">
           Action {{ action.orderNo }}: {{ action.strategyCode }}
           <br />
@@ -714,3 +740,91 @@
     </div>
   </div>
 </div>
+
+
+<div *ngIf="isActionDialogOpen" [title]="'My Custom Dialog'">
+  <div class="dialog-overlay">
+    <div
+      class="modal fade"
+      id="actionDataModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="customDialogLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h5 class="modal-title" id="customDialogLabel">Action Details</h5>
+            <button
+              type="button"
+              class="close"
+              aria-label="Close"
+              (click)="closeActionDialog()"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <h6>Action Dialog</h6>
+          
+            <!-- Display Each Action in a New Line -->
+            <div *ngFor="let item of viewActionData; let i = index" class="action-line">
+              <!-- Display Inputs for Action -->
+              <input
+                type="number"
+                class="form-control d-inline-block w-25 mr-2"
+                [(ngModel)]="item.orderNo"
+                placeholder="Order No"
+              />
+              <input
+                type="text"
+                class="form-control d-inline-block w-50 mr-2"
+                [(ngModel)]="item.strategyCode"
+                placeholder="Strategy Code"
+              />
+              <button
+                type="button"
+                class="btn btn-danger btn-sm ml-2"
+                (click)="removeAction(i, viewActionData)"
+              >
+                Remove
+              </button>
+            </div>
+          
+            <!-- Add New Action Button -->
+            <button type="button" class="btn btn-success mt-3" (click)="addNewAction(viewActionData)">
+              + Add New Action
+            </button>
+          </div>
+          
+
+          <!-- Modal Footer -->
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="closeActionDialog()"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="submitActionDialog()"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

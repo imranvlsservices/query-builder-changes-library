@@ -52,6 +52,7 @@ import {
   EventEmitter,
   Output,
 } from "@angular/core";
+
 declare var bootstrap: any; // Ensure Bootstrap is globally available
 
 export const CONTROL_VALUE_ACCESSOR: any = {
@@ -120,11 +121,10 @@ export class QueryBuilderComponent
     boolean: ["="],
   };
   @Input() disabled: boolean;
-  @Input() data: RuleSet = {  } as any;
-  @Input() newData: any = { };
-  public setData : RuleSet = {  } as any;
+  @Input() data: RuleSet = {} as any;
+  @Input() newData: any = {};
+  public setData: RuleSet = {} as any;
   @Output() setDataChange: EventEmitter<any> = new EventEmitter();
-
 
   // For ControlValueAccessor interface
   public onChangeCallback: () => void;
@@ -199,9 +199,7 @@ export class QueryBuilderComponent
 
   // ----------OnInit Implementation----------
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   onDataChange(updatedData: any): void {
     this.setDataChange.emit(updatedData);
@@ -267,7 +265,12 @@ export class QueryBuilderComponent
   }
   set value(value: RuleSet) {
     // When component is initialized without a formControl, null is passed to value
-    this.data = value || { condition: "and", rules: [],then:{} as any,else:{} as any };
+    this.data = value || {
+      condition: "and",
+      rules: [],
+      then: {} as any,
+      else: {} as any,
+    };
     this.handleDataChange();
   }
 
@@ -444,11 +447,18 @@ export class QueryBuilderComponent
     }
   };
 
-  addRule(parent?: RuleSet): void {
-    this.isDialogOpen = true;
+  addRule(action?: string): void {
+    console.log("In add rule and action is", action);
+    if (action && action == "actionDataModal") {
+      this.isActionDialogOpen = true;
+    } else {
+      this.isDialogOpen = true;
+    }
     // Wait for modal to render, then trigger Bootstrap modal
     setTimeout(() => {
-      const modalElement = document.getElementById("addRuleModal");
+      const modalElement = document.getElementById(
+        action ? action : "addRuleModal"
+      );
       const modalInstance = new bootstrap.Modal(modalElement);
       modalInstance.show();
     }, 100);
@@ -524,6 +534,60 @@ export class QueryBuilderComponent
     this.handleTouched();
     this.handleDataChange();
   }
+
+  editThenAction(action:any){
+    console.log(action);
+    this.viewActionData = action;
+    this.isActionDialogOpen = true;
+    setTimeout(() => {
+      const modalElement = document.getElementById(
+        "actionDataModal"
+      );
+      const modalInstance = new bootstrap.Modal(modalElement);
+      modalInstance.show();
+    }, 100);
+  }
+
+  submitActionDialog(){
+    this.closeActionDialog();
+  }
+
+    // Add a new action
+    addNewAction(action:any): void {
+      this.viewActionData = action;
+      this.viewActionData.push({
+        orderNo: this.viewActionData.length + 1,
+        strategyCode: '',
+        paymentProcessors: undefined
+      });
+    }
+  
+    // Remove an action
+    removeAction(index: number,action: any): void {
+      this.viewActionData = action
+      this.viewActionData.splice(index, 1);
+    }
+
+  closeActionDialog() {
+    setTimeout(() => {
+      const modalElement = document.getElementById("actionDataModal");
+      if (modalElement) {
+        const modalInstance = bootstrap.Modal.getInstance(modalElement); // Get existing instance
+        if (modalInstance) {
+          modalInstance.hide();
+        }
+      }
+
+      // Ensure the backdrop is removed manually if still present
+      const modalBackdrops = document.getElementsByClassName("modal-backdrop");
+      if (modalBackdrops.length > 0) {
+        modalBackdrops[0].parentNode?.removeChild(modalBackdrops[0]);
+      }
+    }, 100);
+    this.isActionDialogOpen = false;
+    this.viewActionData = undefined;
+  }
+
 
   transitionEnd(e: Event): void {
     this.treeContainer.nativeElement.style.maxHeight = null;
@@ -886,6 +950,8 @@ export class QueryBuilderComponent
   isEditing = false;
   editingRule: Rule | null = null;
   isDialogOpen = false;
+  isActionDialogOpen = false;
+  viewActionData: any[] = undefined;
   conditions = [
     { name: "=", value: "=" },
     { name: "!=", value: "!=" },
@@ -936,7 +1002,6 @@ export class QueryBuilderComponent
     // Trigger change and touched handlers
     this.handleTouched();
     this.handleDataChange();
-
   }
 
   close() {
@@ -957,6 +1022,7 @@ export class QueryBuilderComponent
     }, 100);
     this.isDialogOpen = false;
   }
+
 
   getOperatorDisplayName(operator: string, field: string): string {
     const operators = this.getOperators(field);
@@ -983,7 +1049,7 @@ export class QueryBuilderComponent
     return field ? field.name : "N/A";
   }
 
-  returnData(){
+  returnData() {
     console.log(this.newData);
   }
 
